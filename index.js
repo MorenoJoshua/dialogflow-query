@@ -14,9 +14,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Telnyx = function () {
-  function Telnyx(token) {
-    _classCallCheck(this, Telnyx);
+var DialogFlow = function () {
+  function DialogFlow(token) {
+    _classCallCheck(this, DialogFlow);
 
     if (!token) {
       console.warn('A token is needed');
@@ -25,22 +25,21 @@ var Telnyx = function () {
       this.token = token;
     }
 
-    this.telnyxUrl = 'https://sms.telnyx.com/messages';
-    this.sendSMS = this.sendSMS.bind(this);
+    this.dflowUrl = 'https://api.dialogflow.com/v1/query?v=20150910';
+    this.talk = this.talk.bind(this);
   }
 
-  _createClass(Telnyx, [{
-    key: 'sendSMS',
-    value: function sendSMS(to, from, body) {
-      if (!this.token || to.trim() === '' || from.trim() === '' || body.trim() !== '') {
-        console.log(this.token);
-        return _axios2.default.post(this.telnyxUrl, {
-          to: to,
-          body: body,
-          from: from
+  _createClass(DialogFlow, [{
+    key: 'talk',
+    value: function talk(sessionId, query) {
+      if (!this.token || !sessionId || sessionId.trim() !== '') {
+        return _axios2.default.post(this.dflowUrl, {
+          query: query,
+          sessionId: sessionId,
+          lang: "en"
         }, {
           headers: {
-            "X-Profile-Secret": this.token
+            "Authorization": "Bearer " + this.token
           }
         });
       } else {
@@ -49,8 +48,8 @@ var Telnyx = function () {
     }
   }]);
 
-  return Telnyx;
+  return DialogFlow;
 }();
 
-exports.default = Telnyx;
-//# sourceMappingURL=Telnyx.js.map
+exports.default = DialogFlow;
+//# sourceMappingURL=DialogFlow.js.map
